@@ -27,6 +27,9 @@ function useLoadSuggetions(query) {
     setSuggetions(modified);
   }, [query]);
 
+
+  
+
   return suggetions;
 }
 

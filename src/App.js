@@ -12,18 +12,24 @@ function App() {
     setTags((prevState) => [item, ...prevState]);
   };
 
-  const handleKeyPress = (e) => {
+  //handlePressEnter
+  const handlePressEnter = (e) => {
     if (e.key !== "Enter") return;
     handleAddTags(e, e.target.value);
     e.target.value = "";
     setQuery("");
   };
 
+  // handle remove tag
   const handleRemoveTag = (e, index) => {
     e.preventDefault();
     const modified = tags.filter((item, i) => i !== index);
     setTags(modified);
   };
+
+  if (tags.length > 2) {
+    document.querySelector(".tag-list").style.fontSize = "17px";
+  }
 
   return (
     <div className="OuterContainer">
@@ -45,7 +51,7 @@ function App() {
             </ul>
           )}
           <input
-            onKeyPress={handleKeyPress}
+            onKeyPress={handlePressEnter}
             onChange={(e) => setQuery(e.target.value)}
             type="text"
             placeholder="+ Add Tags"
