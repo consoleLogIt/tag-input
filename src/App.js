@@ -7,8 +7,7 @@ function App() {
   const [query, setQuery] = useState("");
 
   // custom hook for loading suggetions
-  const {suggetions,addToDB} = useLoadSuggetions(query);
-
+  const { suggetions, addToDB } = useLoadSuggetions(query);
 
   //handle add tags
   const handleAddTags = (e, item) => {
@@ -20,7 +19,9 @@ function App() {
   const handlePressEnter = (e) => {
     if (e.key !== "Enter") return;
 
-    handleAddTags(e, e.target.value);
+    if (query === "") return;
+
+    handleAddTags(e, query);
     addToDB(e.target.value);
     e.target.value = "";
     setQuery("");
