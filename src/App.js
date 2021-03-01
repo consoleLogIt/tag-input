@@ -27,16 +27,12 @@ function App() {
     setTags(modified);
   };
 
-  if (tags.length > 2) {
-    document.querySelector(".tag-list").style.fontSize = "17px";
-  }
-
   return (
     <div className="OuterContainer">
       <div className="innerContainer">
         <div className="input-tag-container">
           {tags.length > 0 && (
-            <ul className="tag-list">
+            <ul className={tags.length > 2 ? "tag-list-16px" : "tag-list-18px"}>
               {tags.map((item, index) => (
                 <li key={index} className="tags">
                   <span className="tag-name">{item}</span>
