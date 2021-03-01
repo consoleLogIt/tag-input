@@ -5,8 +5,12 @@ import useLoadSuggetions from "./useLoadSuggetions";
 function App() {
   const [tags, setTags] = useState([]);
   const [query, setQuery] = useState("");
-  const suggetions = useLoadSuggetions(query);
 
+  // custom hook for loading suggetions
+  const {suggetions,addToDB} = useLoadSuggetions(query);
+
+
+  //handle add tags
   const handleAddTags = (e, item) => {
     e.preventDefault();
     setTags((prevState) => [item, ...prevState]);
@@ -15,7 +19,9 @@ function App() {
   //handlePressEnter
   const handlePressEnter = (e) => {
     if (e.key !== "Enter") return;
+
     handleAddTags(e, e.target.value);
+    addToDB(e.target.value);
     e.target.value = "";
     setQuery("");
   };
@@ -50,7 +56,7 @@ function App() {
             onKeyPress={handlePressEnter}
             onChange={(e) => setQuery(e.target.value)}
             type="text"
-            placeholder="+ Add Tags"
+            placeholder="+  Add Tags"
           ></input>
         </div>
         <div className="suggetions-container">

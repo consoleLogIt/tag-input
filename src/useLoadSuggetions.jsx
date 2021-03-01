@@ -15,6 +15,10 @@ const db = [
 function useLoadSuggetions(query) {
   const [suggetions, setSuggetions] = useState([]);
 
+  const addToDB = (item) => {
+    db.push(item)
+  }
+
   useEffect(() => {
    
     if (query === "") {
@@ -30,7 +34,7 @@ function useLoadSuggetions(query) {
 
   
 
-  return suggetions;
+  return {suggetions,addToDB};
 }
 
 export default useLoadSuggetions;
