@@ -1,8 +1,7 @@
-name: testing
+name: deploy to prod
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch
+  
   
       
 jobs: 
@@ -12,19 +11,12 @@ jobs:
     env:
       CI: false
     
-   
+    permissions: 
+      contents: write
+      id-token: write
 
 
     steps:
-    - name: Manual Workflow Approval
-      uses: trstringer/manual-approval@v1.8.0
-      with:
-       secret: ${{ secrets.GITHUB_TOKEN }}
-       approvers: consoleLogIt
-       minimum-approvals: 1
-       issue-title: "Deploying to prod from staging"
-       exclude-workflow-initiator-as-approver: false
-
     - name: Checkout
       uses: actions/checkout@v3
 
