@@ -14,6 +14,8 @@ const routeConfigs = [
   },
 ];
 
+//
+
 export default function Plugins() {
   const match = useRouteMatch();
   console.log({ match });
