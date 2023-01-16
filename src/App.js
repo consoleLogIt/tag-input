@@ -1,80 +1,164 @@
-import "./App.css";
-import { useState } from "react";
-import useLoadSuggetions from "./useLoadSuggetions";
+import React from "react";
+import { BrowserRouter as Router, Switch, Link, Route } from "react-router-dom";
+import Plugins from "./Plugins";
 
-function App() {
-  const [tags, setTags] = useState([]);
-  const [query, setQuery] = useState("");
-
-  // custom hook for loading suggetions
-  const { suggetions, addToDB } = useLoadSuggetions(query);
-
-  //handle add tags
-  const handleAddTags = (e, item) => {
-    e.preventDefault();
-    setTags((prevState) => [item, ...prevState]);
-  };
-
-  //handlePressEnter
-  const handlePressEnter = (e) => {
-    if (e.key !== "Enter") return;
-
-    if (query === "") return;
-
-    handleAddTags(e, query);
-    addToDB(e.target.value);
-    e.target.value = "";
-    setQuery("");
-  };
-
-  // handle remove tag
-  const handleRemoveTag = (e, index) => {
-    e.preventDefault();
-    const modified = tags.filter((item, i) => i !== index);
-    setTags(modified);
-  };
-
+const kp_templates = {
+  data: [
+    {
+      divisionDisplay: "Intro Division I",
+      divisionId: "intro_1",
+      blocks: [
+        {
+          comp: "KPMetaPrimary",
+          props: {
+            data: {
+              key: "Type",
+              valuePath: ["meta.kp_content_type"],
+            },
+            invert: true,
+          },
+        },
+        {
+          comp: "TitleInput",
+          isRequired: true,
+          valuePath: "main.title",
+          props: {
+            id: "main.title",
+            readOnly: true,
+            textAlign: "center",
+            placeholder: " ",
+            forceValue: true,
+          },
+        },
+      ],
+    },
+    {
+      divisionDisplay: "Intro Division II",
+      divisionId: "intro_2",
+      blocks: [
+        {
+          comp: "TplMetaBlock",
+          displayOnly: true,
+          props: {
+            showSeparator: true,
+            data: [
+              {
+                img: "kp_contributed_by.avatar",
+                user: "kp_contributed_by.name",
+              },
+              {
+                date: "kp_date_published",
+              },
+            ],
+          },
+        },
+      ],
+    },
+    {
+      divisionDisplay: "Head Division",
+      divisionId: "head",
+      blocks: [],
+    },
+    {
+      divisionDisplay: "Body Division",
+      divisionId: "body",
+      blocks: [
+        {
+          comp: "LinkEmbedWithInput",
+          isRequired: true,
+          props: {
+            label: "Link ",
+            sublabel:
+              "Paste a link to fetch the reports image, title etc. You can the edit it!",
+            id: "main.link",
+          },
+          valuePath: "main.link",
+          HELPER_enableSetValuePath: true,
+          setValuePath: "main.title",
+          setValuePathFn: "linkEmbedWithInputToRichText",
+        },
+        {
+          comp: "PDFInput",
+          props: {
+            id: "main.pdfInput",
+            label: "PDF",
+            sublabel: "Add the pdf of the news report",
+            buttonText: "Add pdf",
+          },
+          isRequired: false,
+          valuePath: "main.pdfInput",
+        },
+        {
+          comp: "RadioInputV2",
+          isRequired: true,
+          valuePath: "main.deathsReported",
+          props: {
+            id: "main.deathsReported",
+            sublabel: "Does this news article mention violence or deaths ",
+            label: "Deaths reported",
+            options: [
+              {
+                value: "Yes",
+                display: "Yes",
+              },
+              {
+                value: "No",
+                display: "No",
+              },
+            ],
+            listType: "vertical",
+          },
+        },
+        {
+          comp: "KPTextInput",
+          props: {
+            placeholder: "Write here...",
+            inputType: "number",
+            label: "Number of deaths Reported",
+            id: "main.deathNumber",
+          },
+          isRequired: true,
+          valuePath: "main.deathNumber",
+          displayConditions: [
+            {
+              valuePath: "main.deathsReported.value",
+              operator: "SOME_EXACT",
+              value: ["Yes"],
+            },
+          ],
+        },
+        {
+          comp: "SummaryInput",
+          isRequired: false,
+          props: {
+            sublabel: "A short description of the article ",
+            label: "Summary",
+            placeholder: "Write here...",
+            id: "main.summary",
+          },
+          valuePath: "main.summaryInput",
+        },
+      ],
+    },
+    {
+      divisionDisplay: "Tags Division",
+      divisionId: "tags",
+      blocks: [],
+    },
+  ],
+};
+export default function App() {
   return (
-    <div className="OuterContainer">
-      <div className="innerContainer">
-        <div className="input-tag-container">
-          {tags.length > 0 && (
-            <ul className={tags.length > 2 ? "tag-list-16px" : "tag-list-18px"}>
-              {tags.map((item, index) => (
-                <li key={index} className="tags">
-                  <span className="tag-name">{item}</span>
-                  <span className="close-btn">
-                    <span
-                      className="cross-icon"
-                      onMouseDown={(e) => handleRemoveTag(e, index)}
-                    ></span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-          <input
-            onKeyPress={handlePressEnter}
-            onChange={(e) => setQuery(e.target.value)}
-            type="text"
-            placeholder="+  Add Tags"
-          ></input>
-        </div>
-        <div className="suggetions-container">
-          {suggetions.length > 0 && (
-            <ul className="suggetions-list">
-              {suggetions.map((item, index) => (
-                <li key={index} onMouseDown={(e) => handleAddTags(e, item)}>
-                  {item}
-                  <sup style={{ padding: "5px" }}>23</sup>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-    </div>
+    // <Router>
+    //   <Link to ="/plugins">plugins</Link> <br/>
+    //   <Link to ="/custom1">custom1</Link>
+
+    //    <Plugins />
+
+    //   {/* <Switch>
+    //     <Route exact path = "/plugins" component={Plugins}  />
+    //   </Switch> */}
+    // </Router>
+    <div>App</div>
   );
 }
-
-export default App;
